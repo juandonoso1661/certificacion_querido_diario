@@ -22,7 +22,7 @@ class MySQLConnection:
             try:
                 query = cursor.mogrify(query, data)
                 print("Ejecutando Query:", query)
-                cursor.execute(query, data)
+                cursor.execute(query)
                 if query.lower().find("insert") >= 0:
                     self.connection.commit()
                     return cursor.lastrowid

@@ -1,4 +1,4 @@
-Flask
-PyMySQL
-flask-bcrypt
-python-dotenv
+.env
+__pycache__/
+*.pyc
+*.zip

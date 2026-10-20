@@ -9,34 +9,34 @@ class Usuario:
         self.id_usuario = data['id_usuario']
         self.nombre = data['nombre']
         self.apellido = data['apellido']
-        self.email = data['email']
+        self.email = data['correo']
         self.edad = data['edad']
-        self.password = data['password']
+        self.password = data['contrasena']
         self.created_at = data['created_at']
 
     @classmethod
     def save(cls, data):
         query = """
-            INSERT INTO usuarios (nombre, apellido, email, edad, password)
+            INSERT INTO usuario (nombre, apellido, correo, edad, contrasena)
             VALUES (%(nombre)s, %(apellido)s, %(email)s, %(edad)s, %(password)s);
         """
         return connectToMySQL().query_db(query, data)
 
     @classmethod
     def get_by_email(cls, email):
-        query = "SELECT * FROM usuarios WHERE email = %(email)s;"
+        query = "SELECT * FROM usuario WHERE correo = %(email)s;"
         data = {'email': email}
         results = connectToMySQL().query_db(query, data)
-        if len(results) < 1:
+        if not results:
             return False
         return cls(results[0])
 
     @classmethod
     def get_by_id(cls, usuario_id):
-        query = "SELECT * FROM usuarios WHERE id_usuario = %(id)s;"
+        query = "SELECT * FROM usuario WHERE id_usuario = %(id)s;"
         data = {'id': usuario_id}
         results = connectToMySQL().query_db(query, data)
-        if len(results) < 1:
+        if not results:
             return False
         return cls(results[0])
 
@@ -61,7 +61,11 @@ class Usuario:
                 flash("Este correo electrónico ya está registrado.", "registro")
                 is_valid = False
 
-        if not user_data['edad'] or int(user_data['edad']) < 1:
+        try:
+            edad_valida = int(user_data['edad']) >= 1
+        except (ValueError, TypeError):
+            edad_valida = False
+        if not edad_valida:
             flash("Ingresa una edad válida.", "registro")
             is_valid = False
 

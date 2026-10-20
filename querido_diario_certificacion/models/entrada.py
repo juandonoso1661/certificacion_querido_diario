@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Entrada:
     def __init__(self, data):
-        self.id_entrada = data['id_entrada']
+        self.id_entrada = data['id_entradas']
         self.fecha = data['fecha']
         self.notas = data['notas']
         self.usuario_id = data['usuario_id']
@@ -38,10 +38,10 @@ class Entrada:
 
     @classmethod
     def get_by_id(cls, entrada_id):
-        query = "SELECT * FROM entradas WHERE id_entrada = %(id)s;"
+        query = "SELECT * FROM entradas WHERE id_entradas = %(id)s;"
         data = {'id': entrada_id}
         results = connectToMySQL().query_db(query, data)
-        if len(results) < 1:
+        if not results:
             return False
         return cls(results[0])
 
@@ -50,14 +50,14 @@ class Entrada:
         query = """
             UPDATE entradas 
             SET fecha = %(fecha)s, notas = %(notas)s 
-            WHERE id_entrada = %(id_entrada)s AND usuario_id = %(usuario_id)s;
+            WHERE id_entradas = %(id_entrada)s AND usuario_id = %(usuario_id)s;
         """
         return connectToMySQL().query_db(query, data)
 
     @classmethod
     def delete(cls, entrada_id, usuario_id):
 
-        query = "DELETE FROM entradas WHERE id_entrada = %(id)s AND usuario_id = %(usuario_id)s;"
+        query = "DELETE FROM entradas WHERE id_entradas = %(id)s AND usuario_id = %(usuario_id)s;"
         data = {'id': entrada_id, 'usuario_id': usuario_id}
         return connectToMySQL().query_db(query, data)
 
@@ -88,10 +88,13 @@ class Entrada:
             flash("La fecha es obligatoria.", "entrada")
             is_valid = False
         else:
-
-            fecha_ingresada = datetime.strptime(data['fecha'], '%Y-%m-%d').date()
-            if fecha_ingresada > datetime.now().date():
-                flash("La fecha no puede ser futura.", "entrada")
+            try:
+                fecha_ingresada = datetime.strptime(data['fecha'], '%Y-%m-%d').date()
+                if fecha_ingresada > datetime.now().date():
+                    flash("La fecha no puede ser futura.", "entrada")
+                    is_valid = False
+            except ValueError:
+                flash("Formato de fecha no válido.", "entrada")
                 is_valid = False
 
         if len(data['notas'].strip()) < 1:
