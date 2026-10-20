@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Bienvenido - Querido Diario{% endblock %}
+
+{% block contenido %}
+<div class="row mt-5">
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-primary mb-3">Registro</h3>
+
+                {% with messages = get_flashed_messages(category_filter=["registro"]) %}
+                {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                    <p class="mb-0">{{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <form action="/registrar" method="POST">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="apellido" name="apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edad" class="form-label">Edad</label>
+                        <input type="number" class="form-control" id="edad" name="edad" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-success mb-3">Iniciar Sesión</h3>
+
+                {% with messages = get_flashed_messages(category_filter=["login"]) %}
+                {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                    <p class="mb-0">{{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <form action="/login" method="POST">
+                    <div class="mb-3">
+                        <label for="login_email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="login_email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="login_password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="login_password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Ingresar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
